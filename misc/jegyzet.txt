@@ -1,0 +1,34 @@
+MSSQL - create
+Connection
+-> reader
+-> adapter
+	(delete, update, insert)
+	
+	
+- megcsinálod az adatbázist (igen, erre van egy külön tantárgyatok....)
+	-> view -> SQL Server Object Explorer 
+	-> (localdb)\MSSQLLocalDB
+	-> környezeti menu -> new query
+	-> doit
+		-> CREATE
+		-> USE
+		-> CREATE tablak
+		-> INSERT data
+		
+- NuGet pkg
+	-> Tools -> NuGet PM -> Manage NuGet pckgs 4 this Sol.
+	-> Browse -> "Microsoft.Data.SqlClient" -> mark -> install
+	
+-> set ConnectionString
+	-> Project -> ###project_neve### Properties -> Resources
+	-> 'create or open assembly resources' => resources.resx
+		-> new string res:
+		n: "ConnectionString" v: "Server={server_neve};Database={db_neve};
+		# https://www.connectionstrings.com
+
+-> dataGridView
+	-> add cols headers
+	-> minden 'allow user' false
+	-> auto col/row : fill/allcell
+	-> row header vis. -> false
+	-> selection mode -> full row
