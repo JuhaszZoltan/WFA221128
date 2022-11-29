@@ -95,7 +95,7 @@ namespace WFA221128
             }
         }
 
-        private bool KiVanToltve(string mezo)
+        private static bool KiVanToltve(string mezo)
         {
             if (string.IsNullOrWhiteSpace(mezo))
             {
