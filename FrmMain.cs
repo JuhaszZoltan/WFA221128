@@ -7,15 +7,12 @@ namespace WFA221128
     {
         private int selectedId = -1;
 
-        public FrmMain()
-        {
-            InitializeComponent();
-        }
+        public FrmMain() => InitializeComponent();
 
         private void DgvReLoad()
         {
             ClearFields();
-            string where = " WHERE DATEADD(year, -18, GETDATE()) > szul";
+            string where = " WHERE DATEADD(year, -18, GETDATE()) >= szul";
 
             dgv.Rows.Clear();
             using SqlConnection conn = new(Resources.ConnectionString);
@@ -26,13 +23,11 @@ namespace WFA221128
                 conn).ExecuteReader();
 
             while (rdr.Read())
-            {
                 dgv.Rows.Add(
                     rdr[0],
                     rdr[1],
                     rdr.GetBoolean(2) ? "férfi" : "nõ",
-                    rdr.GetDateTime(3).ToString("yyyy. MMM dd."));
-            }
+                    rdr.GetDateTime(3).ToString("yyyy. MMMM dd."));
             dgv.ClearSelection();
         }
 
@@ -76,10 +71,7 @@ namespace WFA221128
             //cbNagykoru.Checked = false;
         }
 
-        private void CbNagykoru_CheckedChanged(object sender, EventArgs e)
-        {
-            DgvReLoad();
-        }
+        private void CbNagykoru_CheckedChanged(object sender, EventArgs e) => DgvReLoad();
 
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
@@ -121,28 +113,18 @@ namespace WFA221128
         {
             selectedId = (int)dgv[0, e.RowIndex].Value;
             tbNevUpdate.Text = $"{dgv[1, e.RowIndex].Value}";
-            if ($"{dgv[2, e.RowIndex].Value}" == "férfi")
-            {
-                rbFFUpdate.Checked = true;
-                rbNOUpdate.Checked = false;
-            }
-            else
-            {
-                rbNOUpdate.Checked = true;
-                rbFFUpdate.Checked = false;
-            }
+            rbFFUpdate.Checked = $"{dgv[2, e.RowIndex].Value}" == "férfi";
+            rbNOUpdate.Checked = !rbFFUpdate.Checked;
             dtpSzulUpdate.Value = DateTime.Parse($"{dgv[3, e.RowIndex].Value}");
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            var res = MessageBox.Show(
+            if (MessageBox.Show(
                 caption: "MEGERÕSÍTÉS",
                 text: "Biztos, hogy törölni kívánod a kijelölt rekordot?",
                 buttons: MessageBoxButtons.YesNo,
-                icon: MessageBoxIcon.Warning);
-
-            if (res == DialogResult.Yes)
+                icon: MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 using SqlConnection conn = new(Resources.ConnectionString);
                 conn.Open();
@@ -151,8 +133,7 @@ namespace WFA221128
                 {
                     DeleteCommand = new(
                         $"DELETE FROM emberek WHERE " +
-                        $"id = {selectedId};",
-                        conn),
+                        $"id = {selectedId};", conn),
                 };
                 sda.DeleteCommand.ExecuteNonQuery();
                 DgvReLoad();
